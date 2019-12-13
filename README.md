@@ -1,5 +1,21 @@
 # Kickback Auto Check-In Web Interface
 
+## Develop:
+
+Install:
+```bash
+npm install
+npm run dev
+```
+
+Run Dev Server:
+```bash
+npm run dev
+```
+Build Static Site:
+```bash
+npm run build
+```
 
 ## License
 
