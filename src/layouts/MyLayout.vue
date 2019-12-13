@@ -1,5 +1,5 @@
 <template>
-<q-layout view="lHh Lpr fff" class="bg-grey-1">
+<q-layout view="hHh lPr fff" class="bg-grey-1">
   <q-header elevated height-hint="64">
     <q-toolbar class="GPL__toolbar" style="height: 64px">
 
@@ -10,41 +10,10 @@
     </q-toolbar>
   </q-header>
 
-  <q-drawer v-model="leftDrawerOpen" bordered behavior="mobile" @click="leftDrawerOpen = false">
-    <q-scroll-area class="fit">
-      <q-toolbar class="GPL__toolbar">
-        <q-toolbar-title class="row justify-center items-center text-grey-8">
-          <img src="~assets/kickback.png" height="30">
-        </q-toolbar-title>
-      </q-toolbar>
-
-      <q-list padding>
-        <q-item v-for="link in links1" :key="link.text" clickable class="GPL__drawer-item" :to="link.to">
-          <q-item-section avatar>
-            <q-icon :name="link.icon" />
-          </q-item-section>
-          <q-item-section>
-            <q-item-label>{{ link.text }}</q-item-label>
-          </q-item-section>
-        </q-item>
-
-      </q-list>
-    </q-scroll-area>
-  </q-drawer>
-
   <q-page-container class="GPL__page-container">
     <router-view />
-
-    <q-page-sticky v-if="$q.screen.gt.sm" expand position="left">
-      <div class="fit q-pt-xl q-px-sm column">
-        <q-btn round flat color="grey-8" stack no-caps size="26px" class="GPL__side-btn" to="/">
-          <q-icon size="22px" name="library_books" />
-          <div class="GPL__side-btn__label">Check-In</div>
-        </q-btn>
-
-      </div>
-    </q-page-sticky>
   </q-page-container>
+
 </q-layout>
 </template>
 
@@ -55,12 +24,6 @@ export default {
   data() {
     return {
       leftDrawerOpen: false,
-      links1: [{
-          icon: 'library_books',
-          text: 'Checkin',
-          to: '/'
-        }
-      ]
     }
   }
 }
