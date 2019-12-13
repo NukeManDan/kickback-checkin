@@ -7,7 +7,7 @@
       <q-card-section>
         <div class="text-h5 text-center q-pb-md text-italic">Kickback Event Check-In</div>
 
-        <eventSecretDialog class="justify-center q-mb-md" @new_secret="event_secret"></eventSecretDialog>
+        <eventSecretDialog class="justify-center q-mb-md" @new_secret="checkSecret"></eventSecretDialog>
 
         <!-- LOADING (displayed under image) -->
         <div v-if="isLoading" class="text-center">
@@ -28,6 +28,7 @@
     <q-card class="bg-blue-grey-2" align="center" style="max-width: 90vw;">
 
       <!-- TODO: ADD TOPT QR HERE -->
+      <img :src="qrSrc">
 
     </q-card>
 
@@ -40,7 +41,7 @@
       <h2>Unable to Find Event</h2>
       <h5><em>Please Re-enter the Event Secret</em></h5>
 
-      <eventSecretDialog class="justify-center q-mb-xl" @new_secret="event_secret"></eventSecretDialog>
+      <eventSecretDialog class="justify-center q-mb-xl" @new_secret="checkSecret"></eventSecretDialog>
 
     </q-card>
   </div>
@@ -57,7 +58,7 @@ export default {
   name: "CheckIn",
   data: function() {
     return {
-      event_secret: this.$event_secret,
+      event_secret: '',
       currentStatus: "STATUS_INITIAL",
       qrText: '',
       qrSrc: null
@@ -89,6 +90,20 @@ export default {
   },
 
   methods: {
+    checkSecret(secret) {
+      console.log("TODO!!! Need to get Kickback backend to see if this is valid and return event info for it if so. ");
+      // TODO: Need to get Kickback backend to see if this is valid and return event info for it if so.
+      console.log("*** \n This is the secret set for the QR:\n\n" + secret +"\n\n");
+      this.event_secret = secret;
+      this.qrText = this.genToken(secret);
+      this.generateQrCode();
+      this.currentStatus = "STATUS_SUCCESS";
+    },
+    genToken(secret){
+      // TODO: add token generated from given secret
+      console.log("in TOPT creator");
+      return this.event_secret; // FIXME: get this as the token
+    },
     createObjectUrl(err, canvas) {
       if (!err) {
         canvas.toBlob((blob) => {
@@ -105,9 +120,6 @@ export default {
 
       window.URL.revokeObjectURL(this.qrSrc)
       qrCode.toCanvas(this.qrText, {}, this.createObjectUrl)
-    },
-    openInNewWindow() {
-      window.open(this.qrSrc)
     },
     reset() {
       window.URL.revokeObjectURL(this.qrSrc)

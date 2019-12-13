@@ -21,7 +21,7 @@
 
       <q-card-actions align="around">
         <q-btn class="text-negative q-ml-sm" flat label="Cancel" @click="this.cancel" v-close-popup />
-        <q-btn class="text-positive q-mr-sm" flat label="Set" @click="SetSecret_RefreshData" v-close-popup />
+        <q-btn class="text-positive q-mr-sm" flat label="Set" @click="this.SetSecret" v-close-popup />
       </q-card-actions>
     </q-card>
   </q-dialog>
@@ -42,7 +42,7 @@ export default {
     cancel() {
       this.secret = this.$event_secret;
     },
-    SetSecret_RefreshData() {
+    SetSecret() {
       this.$event_secret = this.secret; //DOESN'T MODIFY THE PROTOTYPE :( pass the secret instead
       this.$emit('new_secret', this.secret)
     }
