@@ -50,6 +50,7 @@
 
 <script>
 import eventSecretDialog from "../components/eventSecretDialog";
+import qrCode from 'qrcode'
 
 export default {
 
@@ -57,9 +58,16 @@ export default {
   data: function() {
     return {
       event_secret: this.$event_secret,
-      currentStatus: "STATUS_INITIAL"
+      currentStatus: "STATUS_INITIAL",
+      qrText: '',
+      qrSrc: null
     };
   },
+
+  beforeDestroy() {
+    this.reset()
+  },
+
   mounted: function() {},
   computed: {
     verifiedColor() {
@@ -79,7 +87,35 @@ export default {
       return this.currentStatus === "STATUS_FAILED_CHECK";
     }
   },
-  methods: {},
+
+  methods: {
+    createObjectUrl(err, canvas) {
+      if (!err) {
+        canvas.toBlob((blob) => {
+          this.qrSrc = window.URL.createObjectURL(blob)
+        })
+      } else {
+        console.warn('generateQrCode:ERROR', err)
+      }
+    },
+    generateQrCode() {
+      if (!this.qrText) {
+        return
+      }
+
+      window.URL.revokeObjectURL(this.qrSrc)
+      qrCode.toCanvas(this.qrText, {}, this.createObjectUrl)
+    },
+    openInNewWindow() {
+      window.open(this.qrSrc)
+    },
+    reset() {
+      window.URL.revokeObjectURL(this.qrSrc)
+      this.qrSrc = null
+      this.qrText = ''
+    }
+  },
+
   components: {
     eventSecretDialog: eventSecretDialog
   }
