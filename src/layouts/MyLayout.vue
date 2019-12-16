@@ -4,7 +4,7 @@
     <q-toolbar class="GPL__toolbar" style="height: 64px">
 
       <q-toolbar-title class="row justify-center items-center no-wrap">
-        <img src="~assets/kickback.png" height="40">
+        <img src="~assets/kickback.png" height="60">
       </q-toolbar-title>
 
     </q-toolbar>

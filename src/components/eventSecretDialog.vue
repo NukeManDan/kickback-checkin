@@ -3,9 +3,15 @@
   <q-btn no-caps icon="phonelink_lock" label="Set Event Secret" color="accent" @click="persistent = true" />
 
   <q-dialog v-model="persistent" persistent transition-show="scale" transition-hide="scale">
-    <q-card class="text-white" style="width: 44vw">
+    <q-card class="text-white" style="width: 90vw">
       <q-card-section style="background: #6e76ff">
-        <div class="text-center text-lg">Set the <b>Event Check-in Secret</b></div>
+        <div class="text-center">
+          <div style="font-size:30px">Set the <b>Event Check-in Secret</b></div>
+          <br>
+          <div style="font-size:20px">This is found in your <b> admin page </b>
+            <br>
+            ONLY viewable by the <b> event organizer! </b> </div>
+        </div>
       </q-card-section>
 
       <q-card-section class="q-mt-md">

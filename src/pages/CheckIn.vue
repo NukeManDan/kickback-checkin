@@ -24,14 +24,23 @@
   </form>
 
   <!--TOPT DISPLAY-->
-  <div v-if="!isInitial && !isFailedCheck" class="flex justify-center q-py-xl">
-    <q-card class="bg-blue-grey-2" align="center" style="max-width: 90vw;">
+  <div v-if="!isInitial && !isFailedCheck" class="text-white flex absolute-center q-py-xl">
+    <q-card align="center" style="max-width: 90vw; background: #6e76ff">
+      <q-card-section>
+        <div class="text-h5 text-center q-pb-md text-italic">Kickback Event Check-In</div>
+      </q-card-section>
 
-      <!-- TODO: ADD TOPT QR HERE -->
-      <img :src="qrSrc">
+      <img :src="qrSrc" class="q-px-sm" style="border-radius: 20px">
+
+      <h3 class="q-px-lg" style="letter-spacing: 5px;">{{token}}</h3>
+
+      <q-linear-progress size="50px" :value="timeProgress" color="accent">
+        <!-- <div class="absolute-full flex flex-center">
+          <q-badge color="white" text-color="accent" :label="timeRemaining" />
+        </div> -->
+      </q-linear-progress>
 
     </q-card>
-
   </div>
 
   <!-- FAILED TO GET EVENT FROM SECRET -->
@@ -51,7 +60,8 @@
 
 <script>
 import eventSecretDialog from "../components/eventSecretDialog";
-import qrCode from 'qrcode'
+import qrCode from 'qrcode';
+import * as otplib from '../../node_modules/otplib/otplib-browser';
 
 export default {
 
@@ -59,6 +69,12 @@ export default {
   data: function() {
     return {
       event_secret: '',
+      token: '',
+      stepTime: 5,
+      stepWindow: 1,
+      interval: 0,
+      timeRemaining: 0,
+      timeProgress: 0,
       currentStatus: "STATUS_INITIAL",
       qrText: '',
       qrSrc: null
@@ -66,11 +82,20 @@ export default {
   },
 
   beforeDestroy() {
+    clearInterval(this.interval)
     this.reset()
   },
 
-  mounted: function() {},
+  mounted: function() {
+    otplib.authenticator.options = {
+      step: this.stepTime,
+      window: this.stepWindow
+    }
+  },
   computed: {
+    timeLabel() {
+      return (this.timeRemaining) + " seconds"
+    },
     verifiedColor() {
       if (this.verifiedCID) return "background: green"
       else return "background: yellow"
@@ -88,21 +113,38 @@ export default {
       return this.currentStatus === "STATUS_FAILED_CHECK";
     }
   },
-
   methods: {
+    counter() {
+      this.interval = setInterval(() => {
+        this.timeRemaining = otplib.authenticator.timeRemaining();
+        this.timeProgress = (this.timeRemaining / this.stepTime);
+
+        // if new time interval, get a new token and display it
+        if (this.timeRemaining === this.stepTime) {
+          this.qrText = this.getToken();
+          this.generateQrCode();
+          return
+        }
+      }, 1000)
+    },
+    setSecret() {
+      // setting
+
+      console.log(otplib.authenticator.options);
+      // this.event_secret = otplib.authenticator.generateSecret(); //generate one on the fly FIXME Kickback backend to do this per event
+    },
     checkSecret(secret) {
       console.log("TODO!!! Need to get Kickback backend to see if this is valid and return event info for it if so. ");
       // TODO: Need to get Kickback backend to see if this is valid and return event info for it if so.
-      console.log("*** \n This is the secret set for the QR:\n\n" + secret +"\n\n");
+      console.log("*** \n This is the secret set for the QR:\n\n" + secret + "\n\n");
       this.event_secret = secret;
-      this.qrText = this.genToken(secret);
+      this.qrText = this.getToken();
+      this.counter(); // start the countdown based on step time
       this.generateQrCode();
       this.currentStatus = "STATUS_SUCCESS";
     },
-    genToken(secret){
-      // TODO: add token generated from given secret
-      console.log("in TOPT creator");
-      return this.event_secret; // FIXME: get this as the token
+    getToken() {
+      return this.token = otplib.authenticator.generate(this.event_secret)
     },
     createObjectUrl(err, canvas) {
       if (!err) {
