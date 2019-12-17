@@ -1,9 +1,16 @@
 # Kickback Auto Check-In Web Interface
 
-live demo: https://nukemandan.github.io/kickback-checkin/
+Generates a Time One Time Password (TOTP) for a Kickback event.
+- Event host provides a secret/passphrase that is (presently) unchecked by kickback
+  - [ ] TODO: Get kickback API integrated to check seceret and gather event information to display along with the TOTP code
+- QR code and text TOTP are shown and rotated at `step = 5 seconds` and `window = 1` (code is valid for `step*(window+1)` time) 
+  - User enters/scans code on [Kickback App](https://github.com/wearekickback/app/) to check-in automatically.
 
 
-## Develop:
+## Live Demo: https://nukemandan.github.io/kickback-checkin/
+
+
+## Developer Notes:
 
 Install:
 ```bash
