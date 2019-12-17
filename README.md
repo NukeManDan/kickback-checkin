@@ -8,8 +8,9 @@
   - User enters/scans code on [Kickback App](https://github.com/wearekickback/app/) to check-in automatically **if the code used is valid**.
 
 
-## Live Demo: https://nukemandan.github.io/kickback-checkin-display
+#### Live Demo: https://nukemandan.github.io/kickback-checkin-display
 
+## Integration with Kickback in [This PR](https://github.com/wearekickback/app/pull/227)
 
 ## Developer Notes:
 
